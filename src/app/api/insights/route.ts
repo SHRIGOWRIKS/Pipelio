@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
     // Avg response time (days)
     const responseTimes = insights
-      .map(i => i.appliedToResponse)
+      .map((i: { appliedToResponse: number | null }) => i.appliedToResponse)
       .filter((v): v is number => v !== null && v > 0);
     const avgResponseDays = responseTimes.length > 0
       ? Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length)
@@ -41,10 +41,10 @@ export async function GET(req: NextRequest) {
 
     // Outcome breakdown
     const outcomes = {
-      responded: insights.filter(i => i.outcome === "RESPONDED").length,
-      offer:     insights.filter(i => i.outcome === "OFFER").length,
-      rejected:  insights.filter(i => i.outcome === "REJECTED").length,
-      ghosted:   insights.filter(i => i.outcome === "GHOSTED").length,
+      responded: insights.filter((i: { outcome: string | null }) => i.outcome === "RESPONDED").length,
+      offer:     insights.filter((i: { outcome: string | null }) => i.outcome === "OFFER").length,
+      rejected:  insights.filter((i: { outcome: string | null }) => i.outcome === "REJECTED").length,
+      ghosted:   insights.filter((i: { outcome: string | null }) => i.outcome === "GHOSTED").length,
     };
 
     const responseRate = count > 0
