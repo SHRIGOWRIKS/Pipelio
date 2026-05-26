@@ -316,7 +316,7 @@ export async function POST() {
       (await prisma.gmailSuggestion.findMany({
         where: { userId: session.user.id },
         select: { emailId: true },
-      })).map(s => s.emailId)
+      })).map((s: { emailId: string }) => s.emailId)
     );
 
     const newSuggestions = [];
