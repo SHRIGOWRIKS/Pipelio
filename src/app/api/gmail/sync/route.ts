@@ -199,7 +199,7 @@ async function classifyEmail(
 
   const jobList = jobs
     .slice(0, 20)
-    .map(j => `- ID: ${j.id} | Company: ${j.company} | Role: ${j.role}`)
+    .map((j: { id: string; company: string; role: string }) => `- ID: ${j.id} | Company: ${j.company} | Role: ${j.role}`)
     .join("\n");
 
   const prompt = `Analyze this email and classify it as job-related or not.

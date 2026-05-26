@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       const firstName = user.name?.split(" ")[0] || "there";
 
       const jobList = user.jobs
-        .map(j => {
+        .map((j: { company: string; role: string; updatedAt: Date }) => {
           const days = Math.floor((Date.now() - new Date(j.updatedAt).getTime()) / (1000 * 60 * 60 * 24));
           return `<li style="margin-bottom:8px;"><strong>${j.role}</strong> at ${j.company} — ${days} days with no response</li>`;
         })
