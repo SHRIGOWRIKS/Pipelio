@@ -1,26 +1,324 @@
 @import "tailwindcss";
 
+/* ── CSS Variables (Light Mode) ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-base:       #FAFAF8;
+  --bg-surface:    #FFFFFF;
+  --bg-subtle:     #F5F5F1;
+  --bg-muted:      #F0F0EC;
+  --border:        #E8E8E4;
+  --border-subtle: #F0F0EC;
+  --text-primary:  #1C1C1E;
+  --text-secondary:#6B7280;
+  --text-muted:    #9CA3AF;
+  --sage:          #6B9E78;
+  --sage-dark:     #5A8A67;
+  --sage-bg:       #EEF4F0;
+  --sage-border:   #C8DDD0;
+  --sage-text:     #4A7C59;
+  --amber-bg:      #FEF9EE;
+  --amber-text:    #92681A;
+  --red-bg:        #FDF0EF;
+  --red-border:    #F5C6C3;
+  --red-text:      #9B3D38;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── CSS Variables (Dark Mode) ── */
+.dark {
+  --bg-base:       #111110;
+  --bg-surface:    #1C1C1A;
+  --bg-subtle:     #252523;
+  --bg-muted:      #2E2E2C;
+  --border:        #3A3A38;
+  --border-subtle: #2E2E2C;
+  --text-primary:  #E8E8E4;
+  --text-secondary:#9CA3AF;
+  --text-muted:    #6B7280;
+  --sage:          #6B9E78;
+  --sage-dark:     #5A8A67;
+  --sage-bg:       #1A2E1E;
+  --sage-border:   #2D4A32;
+  --sage-text:     #8BC49A;
+  --amber-bg:      #2A2010;
+  --amber-text:    #D4A855;
+  --red-bg:        #2A1010;
+  --red-border:    #5A2020;
+  --red-text:      #E88080;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Base styles using variables ── */
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ── Global overrides for dark mode ── */
+.dark {
+  color-scheme: dark;
+}
+
+/* Page backgrounds */
+.dark body {
+  background-color: var(--bg-base);
+}
+
+/* White backgrounds → surface */
+.dark .bg-white {
+  background-color: var(--bg-surface) !important;
+}
+
+/* Subtle backgrounds */
+.dark .bg-\[\#F5F5F1\] { background-color: var(--bg-subtle) !important; }
+.dark .bg-\[\#F0F0EC\] { background-color: var(--bg-muted) !important; }
+.dark .bg-\[\#FAFAF8\] { background-color: var(--bg-base) !important; }
+.dark .bg-\[\#FAFDF9\] { background-color: var(--bg-surface) !important; }
+
+/* Hover backgrounds */
+.dark .hover\:bg-\[\#F5F5F1\]:hover { background-color: var(--bg-subtle) !important; }
+.dark .hover\:bg-\[\#FAFAF8\]:hover  { background-color: var(--bg-muted) !important; }
+.dark .hover\:bg-white:hover         { background-color: var(--bg-subtle) !important; }
+
+/* Text colors */
+.dark .text-\[\#1C1C1E\]  { color: var(--text-primary) !important; }
+.dark .text-\[\#6B7280\]  { color: var(--text-secondary) !important; }
+.dark .text-\[\#9CA3AF\]  { color: var(--text-muted) !important; }
+.dark .text-\[\#1C1917\]  { color: var(--text-primary) !important; }
+.dark .text-\[\#78716C\]  { color: var(--text-secondary) !important; }
+.dark .text-\[\#A8A29E\]  { color: var(--text-muted) !important; }
+
+/* Borders */
+.dark .border-\[\#E8E8E4\]  { border-color: var(--border) !important; }
+.dark .border-\[\#E8E4DF\]  { border-color: var(--border) !important; }
+.dark .border-\[\#F0F0EC\]  { border-color: var(--border-subtle) !important; }
+.dark .divide-\[\#F5F5F1\] > * + * { border-color: var(--border-subtle) !important; }
+
+/* Navbar */
+.dark nav.bg-white,
+.dark nav.bg-white\/90 {
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* Inputs, textareas, selects */
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark textarea,
+.dark select {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Modals */
+.dark [role="dialog"] .bg-white {
+  background-color: var(--bg-surface) !important;
+}
+
+/* Dropdown menus */
+.dark .shadow-sm,
+.dark .shadow-lg,
+.dark .shadow-xl {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Tables */
+.dark table { background-color: var(--bg-surface) !important; }
+.dark th, .dark td { border-color: var(--border) !important; }
+.dark tr:hover td { background-color: var(--bg-subtle) !important; }
+
+/* Timeline — fix the white dot wrapper */
+.dark .flex.flex-col.items-center > div.bg-white,
+.dark .flex.flex-col.items-center > div[class*="bg-white"] {
+  background-color: var(--bg-surface) !important;
+}
+
+/* Kanban drop zones */
+.dark .bg-gray-50\/50 { background-color: var(--bg-subtle) !important; }
+
+/* Footer */
+.dark footer { background-color: #0A0A09 !important; }
+
+/* Toast */
+.dark .bg-white.border.border-\[\#E8E4DF\] {
+  background-color: var(--bg-surface) !important;
+  border-color: var(--border) !important;
+}
+
+/* ── Accessibility ── */
+
+/* 1. Skip navigation link */
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--sage);
+  color: white;
+  border-radius: 0 0 8px 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-nav:focus {
+  top: 0;
+}
+
+/* 2. Focus visible styles — clear, consistent ring */
+:focus-visible {
+  outline: 2px solid var(--sage) !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+/* Remove outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none !important;
+}
+
+/* Stronger focus for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--sage) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(107, 158, 120, 0.2) !important;
+}
+
+/* Dark mode focus */
+.dark :focus-visible {
+  outline-color: var(--sage) !important;
+  box-shadow: 0 0 0 4px rgba(107, 158, 120, 0.3) !important;
+}
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-muted); }
+::-webkit-scrollbar-thumb { background: var(--sage-border); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--sage); }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease both; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.fade-in { animation: fadeIn 0.4s ease both; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+.float { animation: float 4s ease-in-out infinite; }
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, var(--bg-muted) 25%, var(--bg-subtle) 50%, var(--bg-muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes modalEnter {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-hover {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 4px 20px rgba(107, 158, 120, 0.12);
+  transform: translateY(-2px);
+}
+
+/* ── Accessibility ── */
+
+/* Focus visible — keyboard navigation indicator */
+:focus-visible {
+  outline: 2px solid var(--sage);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.focus\:not-sr-only:focus {
+  position: fixed;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .bg-\[\#6B9E78\] { background-color: ButtonText !important; }
+  .text-white { color: ButtonFace !important; }
+  .border-\[\#E8E8E4\] { border-color: ButtonText !important; }
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

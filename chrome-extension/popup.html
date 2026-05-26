@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pipelio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #FAFAF8;
+      color: #1C1C1E;
+      width: 300px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: white;
+      border-bottom: 1px solid #E8E8E4;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-row { display: flex; align-items: center; gap: 8px; }
+    .logo {
+      width: 26px; height: 26px;
+      background: #6B9E78;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo svg { width: 13px; height: 13px; fill: white; }
+    .logo-name { font-size: 14px; font-weight: 700; color: #1C1C1E; }
+    .settings-btn {
+      background: none; border: none; cursor: pointer;
+      color: #9CA3AF; padding: 4px;
+      border-radius: 6px; transition: color 0.15s;
+      display: flex; align-items: center;
+    }
+    .settings-btn:hover { color: #6B7280; background: #F5F5F1; }
+    .settings-btn svg { width: 14px; height: 14px; }
+
+    /* ── States ── */
+
+    /* Saving / loading */
+    .state-saving {
+      padding: 28px 20px;
+      text-align: center;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #E8E8E4;
+      border-top-color: #6B9E78;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .saving-text { font-size: 13px; color: #6B7280; }
+
+    /* Success */
+    .state-success {
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .success-icon {
+      width: 44px; height: 44px;
+      background: #EEF4F0;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+      animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .success-icon svg { width: 22px; height: 22px; stroke: #6B9E78; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    @keyframes popIn {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .success-title { font-size: 15px; font-weight: 700; color: #1C1C1E; margin-bottom: 4px; }
+    .success-sub   { font-size: 12px; color: #6B7280; margin-bottom: 14px; line-height: 1.5; }
+    .job-pill {
+      display: inline-flex; align-items: center; gap-6px;
+      background: #F5F5F1; border: 1px solid #E8E8E4;
+      border-radius: 999px; padding: 5px 12px;
+      font-size: 12px; color: #1C1C1E; font-weight: 500;
+      margin-bottom: 14px; max-width: 100%;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .btn-open {
+      width: 100%;
+      background: #6B9E78; color: white;
+      border: none; border-radius: 9px;
+      padding: 9px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-open:hover { background: #5A8A67; }
+
+    /* Already saved */
+    .state-already {
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .already-icon {
+      width: 44px; height: 44px;
+      background: #EEF4F0;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .already-icon svg { width: 20px; height: 20px; stroke: #6B9E78; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .already-title { font-size: 14px; font-weight: 600; color: #1C1C1E; margin-bottom: 4px; }
+    .already-sub   { font-size: 12px; color: #6B7280; margin-bottom: 14px; }
+
+    /* Error */
+    .state-error {
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .error-icon {
+      width: 44px; height: 44px;
+      background: #FDF0EF;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .error-icon svg { width: 20px; height: 20px; stroke: #9B3D38; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .error-title { font-size: 14px; font-weight: 600; color: #1C1C1E; margin-bottom: 4px; }
+    .error-sub   { font-size: 12px; color: #6B7280; margin-bottom: 14px; line-height: 1.5; }
+    .btn-retry {
+      width: 100%;
+      background: white; color: #1C1C1E;
+      border: 1px solid #E8E8E4; border-radius: 9px;
+      padding: 9px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+      margin-bottom: 8px;
+    }
+    .btn-retry:hover { background: #F5F5F1; }
+
+    /* Not a job page */
+    .state-notjob {
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .notjob-icon { font-size: 30px; margin-bottom: 10px; }
+    .notjob-title { font-size: 13px; font-weight: 600; color: #1C1C1E; margin-bottom: 4px; }
+    .notjob-sub   { font-size: 12px; color: #6B7280; line-height: 1.5; }
+
+    /* Setup screen */
+    .state-setup { padding: 16px; }
+    .setup-title { font-size: 14px; font-weight: 700; color: #1C1C1E; margin-bottom: 4px; }
+    .setup-desc  { font-size: 12px; color: #6B7280; line-height: 1.5; margin-bottom: 14px; }
+    .input-label { font-size: 10px; font-weight: 700; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; display: block; }
+    .input {
+      width: 100%; padding: 8px 10px;
+      border: 1px solid #E8E8E4; border-radius: 8px;
+      font-size: 12px; color: #1C1C1E; background: white;
+      outline: none; transition: border-color 0.15s;
+      margin-bottom: 10px;
+    }
+    .input:focus { border-color: #6B9E78; }
+    .input::placeholder { color: #9CA3AF; }
+    .btn-connect {
+      width: 100%;
+      background: #6B9E78; color: white;
+      border: none; border-radius: 9px;
+      padding: 9px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-connect:hover { background: #5A8A67; }
+    .btn-connect:disabled { opacity: 0.5; cursor: not-allowed; }
+    .setup-error {
+      background: #FDF0EF; border: 1px solid #F5C6C3;
+      border-radius: 8px; padding: 8px 10px;
+      font-size: 11px; color: #9B3D38;
+      margin-top: 8px; display: none;
+    }
+    .setup-hint {
+      font-size: 11px; color: #9CA3AF;
+      text-align: center; margin-top: 10px; line-height: 1.5;
+    }
+    .setup-hint a { color: #6B9E78; text-decoration: none; }
+    .setup-hint a:hover { text-decoration: underline; }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid #E8E8E4;
+      padding: 8px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-link { font-size: 11px; color: #9CA3AF; text-decoration: none; }
+    .footer-link:hover { color: #6B9E78; }
+    .footer-status {
+      font-size: 10px; color: #9CA3AF;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #6B9E78; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><path d="M20 7H4C2.9 7 2 7.9 2 9v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 13H4V9h16v11zM16 1H8C6.9 1 6 1.9 6 3v4h2V3h8v4h2V3c0-1.1-.9-2-2-2z"/></svg>
+      </div>
+      <span class="logo-name">Pipelio</span>
+    </div>
+    <button class="settings-btn" id="settings-btn" title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Autofill state -->
+  <div id="state-autofill" style="display:none;">
+    <div style="padding: 18px 16px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <div style="width:36px;height:36px;background:#EEF4F0;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B9E78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <p style="font-size:13px;font-weight:700;color:#1C1C1E;">Application form detected</p>
+          <p style="font-size:11px;color:#6B7280;">Fill it with your Pipelio profile</p>
+        </div>
+      </div>
+
+      <div style="background:#F5F5F1;border-radius:10px;padding:10px 12px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:11px;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Name</span>
+          <span style="font-size:12px;color:#1C1C1E;font-weight:500;" id="autofill-name">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-size:11px;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Email</span>
+          <span style="font-size:12px;color:#1C1C1E;font-weight:500;" id="autofill-email">—</span>
+        </div>
+      </div>
+
+      <div id="autofill-result" style="display:none;background:#EEF4F0;border-radius:8px;padding:8px 12px;font-size:12px;color:#4A7C59;font-weight:600;text-align:center;margin-bottom:10px;"></div>
+
+      <button id="btn-autofill" class="btn-open" style="margin-bottom:8px;">
+        ⚡ Autofill Application
+      </button>
+      <button id="btn-save-job" style="width:100%;background:white;color:#6B7280;border:1px solid #E8E8E4;border-radius:9px;padding:8px;font-size:12px;font-weight:500;cursor:pointer;">
+        Also save job to pipeline
+      </button>
+    </div>
+  </div>
+
+  <!-- Saving state -->
+  <div id="state-saving" style="display:none;">
+    <div class="state-saving">
+      <div class="spinner"></div>
+      <p class="saving-text">Saving to your pipeline...</p>
+    </div>
+  </div>
+
+  <!-- Success state -->
+  <div id="state-success" style="display:none;">
+    <div class="state-success">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <p class="success-title">Added to Pipelio!</p>
+      <p class="success-sub" id="success-job-name"></p>
+      <button class="btn-open" id="btn-open-dashboard">Open Dashboard →</button>
+    </div>
+  </div>
+
+  <!-- Already saved state -->
+  <div id="state-already" style="display:none;">
+    <div class="state-already">
+      <div class="already-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z"/></svg>
+      </div>
+      <p class="already-title">Already in your pipeline</p>
+      <p class="already-sub" id="already-job-name"></p>
+      <button class="btn-open" id="btn-open-already">View in Dashboard →</button>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div id="state-error" style="display:none;">
+    <div class="state-error">
+      <div class="error-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <p class="error-title">Couldn't save</p>
+      <p class="error-sub" id="error-msg"></p>
+      <button class="btn-retry" id="btn-retry">Try again</button>
+      <button class="btn-open" id="btn-open-error">Open Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Not a job page -->
+  <div id="state-notjob" style="display:none;">
+    <div class="state-notjob">
+      <div class="notjob-icon">🔍</div>
+      <p class="notjob-title">No job detected</p>
+      <p class="notjob-sub">Navigate to a job listing on LinkedIn, Indeed, Glassdoor, or another job board.</p>
+    </div>
+  </div>
+
+  <!-- Setup screen (first time only) -->
+  <div id="state-setup" style="display:none;">
+    <div class="state-setup">
+      <p class="setup-title">Connect to Pipelio</p>
+      <p class="setup-desc">One-time setup. After this, saving jobs is instant.</p>
+      <label class="input-label">Your Pipelio URL</label>
+      <input class="input" id="url-input" type="url" placeholder="https://yourapp.vercel.app" />
+      <label class="input-label">API Token</label>
+      <input class="input" id="token-input" type="password" placeholder="From Settings → API Token" />
+      <button class="btn-connect" id="btn-connect">Connect</button>
+      <div class="setup-error" id="setup-error"></div>
+      <p class="setup-hint">
+        Get your token from <a href="#" id="settings-link">Pipelio → Settings</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <a href="#" class="footer-link" id="footer-dashboard">pipelio.app</a>
+    <span class="footer-status" id="footer-status" style="display:none;">
+      <span class="dot"></span> Connected
+    </span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
