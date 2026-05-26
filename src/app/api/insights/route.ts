@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
     // Avg response time (days)
     const responseTimes = insights
       .map((i: { appliedToResponse: number | null }) => i.appliedToResponse)
-      .filter((v): v is number => v !== null && v > 0);
+      .filter((v: number | null): v is number => v !== null && v > 0);
     const avgResponseDays = responseTimes.length > 0
       ? Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length)
       : null;
