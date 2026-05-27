@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const { resumeText } = await req.json();
     if (!resumeText) return NextResponse.json({ error: "Resume text required" }, { status: 400 });
 
-    const model = getModel();
+    const model = await getModel();
 
     const prompt = [
       "Analyze this resume. Return ONLY valid JSON (no markdown, no backticks):",

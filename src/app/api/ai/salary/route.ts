@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const { offerAmount, role, location, yearsExp, currentSalary, currency } = await req.json();
     if (!offerAmount || !role) return NextResponse.json({ error: "Offer amount and role required" }, { status: 400 });
 
-    const model = getModel();
+    const model = await getModel();
 
     const offer = Number(offerAmount);
     const current = currentSalary ? Number(currentSalary) : null;

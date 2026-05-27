@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Both resume and job description required" }, { status: 400 });
     }
 
-    const model = getModel();
+    const model = await getModel();
 
     const prompt = [
       "Compare this resume against the job description. Return ONLY valid JSON (no markdown, no backticks):",

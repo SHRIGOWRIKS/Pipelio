@@ -1,14 +1,13 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-export function getModel() {
+export async function getModel() {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("AI not configured");
+  // Lazy import to avoid build-time issues
+  const { GoogleGenerativeAI } = await import("@google/generative-ai");
   const genAI = new GoogleGenerativeAI(apiKey);
   return genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 }
 
 export function parseAIJson(text: string): object | null {
-  // Strip markdown code fences
   const cleaned = text
     .replace(/^```[\w]*\s*/gm, "")
     .replace(/^```\s*/gm, "")
@@ -20,7 +19,6 @@ export function parseAIJson(text: string): object | null {
   try {
     return JSON.parse(match[0]);
   } catch {
-    // Try to recover truncated JSON
     const partial = match[0];
     const lastComma = partial.lastIndexOf(",");
     if (lastComma > 0) {

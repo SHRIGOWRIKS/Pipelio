@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Job description and resume are required" }, { status: 400 });
     }
 
-    const model = getModel();
+    const model = await getModel();
 
     const toneGuide = tone === "formal" ? "formal and professional"
       : tone === "casual" ? "conversational but professional"

@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const { jobDescription, resumeText } = await req.json();
     if (!jobDescription) return NextResponse.json({ error: "Job description is required" }, { status: 400 });
 
-    const model = getModel();
+    const model = await getModel();
 
     const prompt = [
       "Generate interview prep for this job. Return ONLY valid JSON (no markdown, no backticks):",

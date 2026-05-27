@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Company and role are required" }, { status: 400 });
     }
 
-    const model = getModel();
+    const model = await getModel();
 
     const daysSince = appliedDate
       ? Math.floor((Date.now() - new Date(appliedDate).getTime()) / (1000 * 60 * 60 * 24))
