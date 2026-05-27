@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 // Helper: resolve user from session OR Bearer token
 async function resolveUserId(req: NextRequest): Promise<string | null> {
   // Try session first

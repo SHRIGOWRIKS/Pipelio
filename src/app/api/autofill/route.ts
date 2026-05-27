@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 // This endpoint is called by the Chrome extension (Bearer token auth only)
 // Returns all autofill data for the user
 export async function GET(req: NextRequest) {

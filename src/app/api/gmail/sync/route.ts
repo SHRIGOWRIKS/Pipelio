@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+export const dynamic = "force-dynamic";
+
 // ── Token management ──────────────────────────────────────────────────────────
 async function getValidAccessToken(userId: string): Promise<string | null> {
   // First try to refresh using stored refresh token in User table

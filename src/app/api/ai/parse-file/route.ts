@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 async function parsePDF(buffer: Buffer): Promise<string> {
   // Use pdfjs-dist in legacy Node.js mode
   const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");

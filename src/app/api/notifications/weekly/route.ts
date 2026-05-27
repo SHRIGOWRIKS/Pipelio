@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Resend } from "resend";
 
+export const dynamic = "force-dynamic";
+
 // This endpoint is called by a cron job (Vercel Cron or external)
 // Protected by a secret key
 export async function POST(req: NextRequest) {

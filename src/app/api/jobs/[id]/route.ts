@@ -3,6 +3,8 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const updateJobSchema = z.object({
   company: z.string().min(1).optional(),
   role: z.string().min(1).optional(),
